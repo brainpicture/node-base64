@@ -2,6 +2,9 @@ var base64 = require("./build/default/base64");
 var jsbase64 = require("./js_base64_for_comparsion");
 var sys = require("sys");
 
+//sys.puts(base64.encode('wow'));
+
+
 if (base64.encode('What do ya want for nothing?')=='V2hhdCBkbyB5YSB3YW50IGZvciBub3RoaW5nPw==')
 	sys.puts('test 1 PASSED');
 else
@@ -33,3 +36,4 @@ var js=m2-m1;
 sys.puts('JS base64 result is: '+(js));
 if (c<js) sys.puts('C++ module faster than JS in '+(js/c)+' times');
 else if (c>js) sys.puts('JS module faster than C++ in '+(c/j)+' times');
+

@@ -32,8 +32,8 @@ You should use `var base64 = require("base64");` (from any path)
 	
 ## Speed testing
 To run speed test on your computer run test.js, here is my:
-	C++ base64 result is: 203
-	JS base64 result is: 539
-	C++ module faster than JS in 2.6551724137931036 times
+	C++ base64 result is: 82
+	JS base64 result is: 517
+	C++ module faster than JS in 6.304878048780488 times
 
 <img src="http://nodejs.ru/img/small.png">
