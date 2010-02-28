@@ -3,6 +3,6 @@ all:
 tests:
 	node ./test.js
 install:
-	cp ./build/default/hashlib.node /usr/local/lib/node/libraries/hashlib.node
+	cp ./build/default/base64.node /usr/local/lib/node/libraries/base64.node
 clean:
 	rm -rf ./build
