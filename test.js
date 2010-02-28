@@ -30,6 +30,6 @@ for(i=0;i<10000;i++) {
 }
 var m2=new Date().getTime();
 var js=m2-m1;
-sys.puts('JS base64 result is: '+(c));
+sys.puts('JS base64 result is: '+(js));
 if (c<js) sys.puts('C++ module faster than JS in '+(js/c)+' times');
 else if (c>js) sys.puts('JS module faster than C++ in '+(c/j)+' times');
