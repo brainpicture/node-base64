@@ -1,6 +1,5 @@
 <?php
-echo(base64_encode('wow'));
-die();
+
 $m1=microtime();
 for($i=0;$i<10000;$i++) {
 	$h=base64_decode(base64_encode('EdPy2H71Q1MjTzkuRxAr1CJWs2ZapZEuaY3XwJL8mpxaTBLWZPkw1yakKLv2r79eHmNQ1m2Cc6PErAkH5FR3Nmd011F09LCas76Z'.$i));

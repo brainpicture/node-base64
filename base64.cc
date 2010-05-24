@@ -167,12 +167,13 @@ unsigned char *base64_decode(const unsigned char *str, int length, int *ret_leng
 Handle<Value>
 base64_encode_binding(const Arguments& args)
 {
-  HandleScope scope;
-  String::Utf8Value data(args[0]->ToString());
-  int len;
-  unsigned char* str=base64_encode((unsigned char*)*data,data.length(),&len);
-	     
-  return String::New((const char*)str,len);
+ HandleScope scope;
+ String::Utf8Value data(args[0]->ToString());
+ int len;
+ unsigned char* str=base64_encode((unsigned char*)*data,data.length(),&len);
+ Local<String> ret = String::New((const char*)str,len);
+ free(str);
+ return ret;
 }
 
 
