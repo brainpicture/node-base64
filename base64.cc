@@ -170,7 +170,7 @@ base64_encode_binding(const Arguments& args)
  HandleScope scope;
  String::Utf8Value data(args[0]->ToString());
  int len;
- unsigned char* str=base64_encode((unsigned char*)*data,data.length(),&len);
+ unsigned char* str = base64_encode((unsigned char*)*data,data.length(),&len);
  Local<String> ret = String::New((const char*)str,len);
  free(str);
  return ret;
@@ -184,8 +184,9 @@ base64_decode_binding(const Arguments& args)
   String::Utf8Value data(args[0]->ToString());
   int len;
   unsigned char* str=base64_decode((unsigned char*)*data,data.length(),&len);
-	     
-  return String::New((const char*)str,len);
+	Local<String> ret = String::New((const char*)str,len);
+	free(str);
+  return ret;
 }
 
 
