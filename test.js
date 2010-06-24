@@ -1,9 +1,11 @@
-var base64 = require("./build/default/base64");
-var jsbase64 = require("./js_base64_for_comparsion");
-var sys = require("sys");
+var base64 = require("./build/default/base64"),
+    jsbase64 = require("./js_base64_for_comparsion"),
+    Buffer = require('buffer').Buffer,
+    sys = require("sys");
 
 //sys.puts(base64.encode('wow'));
-
+var textBuff = new Buffer('What do ya want for nothing?', 'utf8');
+var baseBuff = new Buffer('V2hhdCBkbyB5YSB3YW50IGZvciBub3RoaW5nPw==', 'utf8');
 
 if (base64.encode('What do ya want for nothing?')=='V2hhdCBkbyB5YSB3YW50IGZvciBub3RoaW5nPw==')
 	sys.puts('test 1 PASSED');
@@ -14,6 +16,16 @@ if (base64.decode(base64.encode('What do ya want for nothing?'))=='What do ya wa
 	sys.puts('test 2 PASSED');
 else
 	sys.puts('test 2 FAILS');
+	
+if (base64.encode(textBuff)=='V2hhdCBkbyB5YSB3YW50IGZvciBub3RoaW5nPw==')
+	sys.puts('test 3 PASSED');
+else
+	sys.puts('test 3 FAILS');
+	
+if (base64.decode(baseBuff)=='What do ya want for nothing?')
+	sys.puts('test 4 PASSED');
+else
+	sys.puts('test 4 FAILS');
 	
 	
 // C++ base64

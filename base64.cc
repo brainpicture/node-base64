@@ -8,12 +8,15 @@
  */
  
 #include <v8.h>
+#include <node.h>
+#include <node_buffer.h>
 
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 
 using namespace v8;
+using namespace node;
 
 static const char base64_table[] = {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -45,11 +48,11 @@ static const short base64_reverse_table[256] = {
 };
 
 
-unsigned char* base64_encode(const unsigned char *str, int length, int *ret_length) /* {{{ */
+char* base64_encode(const unsigned char *str, int length, int *ret_length) /* {{{ */
 {
 	const unsigned char *current = str;
-	unsigned char *p;
-	unsigned char *result;
+	char *p;
+	char *result;
 
 	if ((length + 2) < 0 || ((length + 2) / 3) >= (1 << (sizeof(int) * 8 - 2))) {
 		if (ret_length != NULL) {
@@ -58,7 +61,7 @@ unsigned char* base64_encode(const unsigned char *str, int length, int *ret_leng
 		return NULL;
 	}
 
-	result = (unsigned char *)malloc((((length + 2) / 3) * 4)*(sizeof(char))+(1));
+	result = (char *)malloc((((length + 2) / 3) * 4)*(sizeof(char))+(1));
 	if (result == NULL) {
         fprintf(stderr, "out of memory!\n");
         exit(1);
@@ -95,13 +98,13 @@ unsigned char* base64_encode(const unsigned char *str, int length, int *ret_leng
 }
 
 
-unsigned char *base64_decode(const unsigned char *str, int length, int *ret_length)
+char *base64_decode(const unsigned char *str, int length, int *ret_length)
 {
 	const unsigned char *current = str;
 	int ch, i = 0, j = 0, k;
-	unsigned char *result;
+	char *result;
 
-	result = (unsigned char *)malloc(length+1);
+	result = (char *)malloc(length+1);
 	if (result == NULL) {
         fprintf(stderr, "out of memory!\n");
         exit(1);
@@ -168,11 +171,19 @@ Handle<Value>
 base64_encode_binding(const Arguments& args)
 {
  HandleScope scope;
- String::Utf8Value data(args[0]->ToString());
  int len;
- unsigned char* str=base64_encode((unsigned char*)*data,data.length(),&len);
- Local<String> ret = String::New((const char*)str,len);
- free(str);
+ Local<String> ret;
+ if (Buffer::HasInstance(args[0])) {
+   Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
+   char *str = base64_encode((unsigned char*)buffer->data(), buffer->length(),&len);
+   ret = String::New(str, len);
+   delete str;
+ } else {
+   String::Utf8Value data(args[0]->ToString());
+   char* str = base64_encode((unsigned char*)*data,data.length(),&len);
+   ret = String::New(str,len);
+   delete str;
+ }
  return ret;
 }
 
@@ -181,11 +192,20 @@ Handle<Value>
 base64_decode_binding(const Arguments& args)
 {
   HandleScope scope;
-  String::Utf8Value data(args[0]->ToString());
+  Local<String> ret;
   int len;
-  unsigned char* str=base64_decode((unsigned char*)*data,data.length(),&len);
-	     
-  return String::New((const char*)str,len);
+  if (Buffer::HasInstance(args[0])) {
+    Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
+    char *str = base64_decode((unsigned char*)buffer->data(), buffer->length(),&len);
+    ret = String::New(str, len);
+    delete str;
+  } else {
+    String::Utf8Value data(args[0]->ToString());
+    char* str=base64_decode((unsigned char*)*data,data.length(),&len);
+	  ret = String::New(str,len);
+	  delete str;
+	}
+  return ret;
 }
 
 
