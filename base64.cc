@@ -171,19 +171,17 @@ Handle<Value>
 base64_encode_binding(const Arguments& args)
 {
  HandleScope scope;
+ char *str;
  int len;
- Local<String> ret;
  if (Buffer::HasInstance(args[0])) {
    Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
-   char *str = base64_encode((unsigned char*)buffer->data(), buffer->length(),&len);
-   ret = String::New(str, len);
-   delete str;
+   str = base64_encode((unsigned char*)buffer->data(), buffer->length(), &len);
  } else {
    String::Utf8Value data(args[0]->ToString());
-   char* str = base64_encode((unsigned char*)*data,data.length(),&len);
-   ret = String::New(str,len);
-   delete str;
+   str = base64_encode((unsigned char*)*data, data.length(), &len);
  }
+ Local<String> ret = String::New(str, len);
+ free(str);
  return ret;
 }
 
@@ -192,19 +190,17 @@ Handle<Value>
 base64_decode_binding(const Arguments& args)
 {
   HandleScope scope;
-  Local<String> ret;
+  char *str;
   int len;
   if (Buffer::HasInstance(args[0])) {
     Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
-    char *str = base64_decode((unsigned char*)buffer->data(), buffer->length(),&len);
-    ret = String::New(str, len);
-    delete str;
+    str = base64_decode((unsigned char*)buffer->data(), buffer->length(), &len);
   } else {
     String::Utf8Value data(args[0]->ToString());
-    char* str=base64_decode((unsigned char*)*data,data.length(),&len);
-	  ret = String::New(str,len);
-	  delete str;
-	}
+    str = base64_decode((unsigned char*)*data, data.length(), &len);
+  }
+  Local<String> ret = String::New(str, len);
+  free(str);
   return ret;
 }
 
