@@ -1,8 +1,6 @@
 all:
-	node-waf configure build
+	node-waf configure build && mkdir -p ~/.node_libraries && cp ./build/default/base64.node ~/.node_libraries/base64.node
 tests:
 	node ./test.js
-install:
-	cp ./build/default/base64.node /usr/local/lib/node/libraries/base64.node
 clean:
 	rm -rf ./build
