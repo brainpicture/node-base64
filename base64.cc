@@ -110,9 +110,9 @@ char *base64_decode(const unsigned char *str, int length, int *ret_length)
         exit(1);
     }
 
-	while ((ch = *current++) != '\0' && length-- > 0) {
+	while (length-- > 0 && (ch = *current++) != '\0') {
 		if (ch == base64_pad) {
-			if (*current != '=' && (i % 4) == 1) {
+			if ((i % 4) == 1 && *current != '=') {
 				free(result);
 				return NULL;
 			}
