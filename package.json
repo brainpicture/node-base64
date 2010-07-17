@@ -1,0 +1,7 @@
+{ "name": "node-base64"
+,"version": "1.0.0"
+,"main": "./build/default"
+,"description": "Node.js module for base64 encoding and decoding."
+,"scripts" : { "install" : "./install.sh" }
+,"dependencies": []
+}
