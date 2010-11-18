@@ -110,9 +110,9 @@ char *base64_decode(const unsigned char *str, int length, int *ret_length)
         exit(1);
     }
 
-	while (length-- > 0 && (ch = *current++) != '\0') {
+	while ((ch = *current++) != '\0' && length-- > 0) {
 		if (ch == base64_pad) {
-			if ((i % 4) == 1 && *current != '=') {
+			if (*current != '=' && (i % 4) == 1) {
 				free(result);
 				return NULL;
 			}
@@ -171,18 +171,21 @@ Handle<Value>
 base64_encode_binding(const Arguments& args)
 {
  HandleScope scope;
- char *str;
  int len;
+ Local<String> ret;
  if (Buffer::HasInstance(args[0])) {
-   Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
-   str = base64_encode((unsigned char*)buffer->data(), buffer->length(), &len);
+   //Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
+   Handle<Object> buffer = args[0]->ToObject();
+   char *str = base64_encode((unsigned char*)Buffer::Data(buffer), Buffer::Length(buffer),&len);
+   ret = String::New(str, len);
+   delete str;
  } else {
    String::Utf8Value data(args[0]->ToString());
-   str = base64_encode((unsigned char*)*data, data.length(), &len);
+   char* str = base64_encode((unsigned char*)*data,data.length(),&len);
+   ret = String::New(str,len);
+   delete str;
  }
- Local<String> ret = String::New(str, len);
- free(str);
- return ret;
+ return scope.Close(ret);
 }
 
 
@@ -190,18 +193,22 @@ Handle<Value>
 base64_decode_binding(const Arguments& args)
 {
   HandleScope scope;
-  char *str;
+  Local<String> ret;
   int len;
   if (Buffer::HasInstance(args[0])) {
-    Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
-    str = base64_decode((unsigned char*)buffer->data(), buffer->length(), &len);
+    //Buffer *buffer = ObjectWrap::Unwrap<Buffer>(args[0]->ToObject());
+    Handle<Object> buffer = args[0]->ToObject();
+    
+    char *str = base64_decode((unsigned char*)Buffer::Data(buffer), Buffer::Length(buffer),&len);
+    ret = String::New(str, len);
+    delete str;
   } else {
     String::Utf8Value data(args[0]->ToString());
-    str = base64_decode((unsigned char*)*data, data.length(), &len);
-  }
-  Local<String> ret = String::New(str, len);
-  free(str);
-  return ret;
+    char* str=base64_decode((unsigned char*)*data,data.length(),&len);
+	  ret = String::New(str,len);
+	  delete str;
+	}
+  return scope.Close(ret);
 }
 
 
